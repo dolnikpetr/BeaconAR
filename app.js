@@ -27,26 +27,29 @@ async function loadScenarios() {
 
     try {
 
-        const response =
-            await fetch(`${API}?action=list`);
+        const url = `${API}?action=list`;
 
-        console.log("Response:", response);
+        console.log("Calling:", url);
 
-        const data =
-            await response.json();
+        const response = await fetch(url);
 
-        console.log("Data:", data);
+        console.log("Status:", response.status);
+        console.log("OK:", response.ok);
+        console.log("Headers:", [...response.headers.entries()]);
 
-        status.textContent =
-            "Scénáře načteny.";
+        const text = await response.text();
+
+        console.log("RAW RESPONSE:");
+        console.log(text);
+
+        status.textContent = "Odpověď přijata.";
 
     }
     catch (error) {
 
         console.error(error);
 
-        status.textContent =
-            error.message;
+        status.textContent = error.name + ": " + error.message;
 
     }
 
