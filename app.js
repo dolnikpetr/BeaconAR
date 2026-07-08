@@ -17,6 +17,33 @@ const VERSION = "4";
 const API =
     "https://script.google.com/macros/s/AKfycbz3I2onzrPLR7Bcfb-6cbeRtA74hf6utX0YGkIpCV_VKGR4jOPhBhdzzcKatojh6PvZWA/exec";
 
+const ICONS = {
+
+    pin: "📍",
+    camp: "🏕️",
+    crate: "📦",
+    antenna: "📡",
+
+    star: "⭐",
+    person: "👤",
+    house: "🏠",
+    door: "🚪"
+
+};
+
+const COLORS = {
+
+    white: "#ffffff",
+    blue: "#2563eb",
+    green: "#16a34a",
+    yellow: "#eab308",
+    orange: "#ea580c",
+    red: "#dc2626",
+    purple: "#9333ea"
+
+};
+
+
 // =====================================================
 // DOM
 // =====================================================
@@ -63,6 +90,8 @@ let currentScenario = null;
 let currentLocation = null;
 
 let currentHeading = null;
+
+let pointContainer;
 
 // =====================================================
 
@@ -204,11 +233,54 @@ async function enterAR() {
 
     }
 
+    initializeRenderer();
+
     startGPS();
 
     await startCompass();
 
 }
+
+function initializeRenderer() {
+
+    if (pointContainer) {
+
+        pointContainer.remove();
+
+    }
+
+    pointContainer = document.createElement("div");
+
+    pointContainer.id = "pointContainer";
+
+    screenAR.appendChild(pointContainer);
+
+    currentScenario.points.forEach(point => {
+
+        const element = document.createElement("div");
+
+        element.className = "point";
+
+        const icon = ICONS[point.icon] || "📍";
+
+        element.textContent =
+            `${icon} ${point.name}`;
+
+        element.style.color =
+            COLORS[point.color] || "#ffffff";
+
+        element.style.left = "20px";
+
+        element.style.top = "20px";
+
+        point.element = element;
+
+        pointContainer.appendChild(element);
+
+    });
+
+}
+
 
 // =====================================================
 // CAMERA
