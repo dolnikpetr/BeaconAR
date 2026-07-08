@@ -33,6 +33,16 @@ const scenarioList =
 const camera =
     document.getElementById("camera");
 
+const debugGps =
+    document.getElementById("debugGps");
+
+const debugHeading =
+    document.getElementById("debugHeading");
+
+const debugPoints =
+    document.getElementById("debugPoints");
+
+
 // =====================================================
 // STATE
 // =====================================================
@@ -401,6 +411,8 @@ function startAREngine() {
 
 // =====================================================
 
+// =====================================================
+
 function updateAR() {
 
     if (!currentScenario) {
@@ -411,7 +423,7 @@ function updateAR() {
 
     if (!currentLocation) {
 
-        console.log("Waiting for GPS...");
+        debugGps.textContent = "GPS: čekám...";
 
         return;
 
@@ -419,51 +431,28 @@ function updateAR() {
 
     updateScenario();
 
-    console.clear();
+    debugGps.textContent =
+        "GPS: ±" +
+        Math.round(currentLocation.accuracy) +
+        " m";
 
-    console.log("GPS");
+    debugHeading.textContent =
+        "Heading: " +
 
-    console.table([{
-
-        latitude: currentLocation.latitude.toFixed(6),
-
-        longitude: currentLocation.longitude.toFixed(6),
-
-        accuracy: Math.round(currentLocation.accuracy)
-
-    }]);
-
-    console.log("Compass");
-
-    console.table([{
-
-        available: compassAvailable,
-
-        heading:
+        (
 
             currentHeading == null
 
                 ? "-"
 
-                : Math.round(currentHeading)
+                : Math.round(currentHeading) + "°"
 
-    }]);
+        );
 
-    console.log("Points");
+    debugPoints.textContent =
+        "Points: " +
 
-    console.table(
-
-        currentScenario.points.map(point => ({
-
-            name: point.name,
-
-            distance: Math.round(point.distance),
-
-            bearing: Math.round(point.bearing)
-
-        }))
-
-    );
+        currentScenario.points.length;
 
 }
 
