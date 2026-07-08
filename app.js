@@ -45,6 +45,8 @@ let gpsWatchId = null;
 
 let arTimer = null;
 
+let currentHeading = null;
+
 // =====================================================
 
 window.addEventListener("load", init);
@@ -168,6 +170,8 @@ async function loadScenario(id) {
 // AR
 // =====================================================
 
+// =====================================================
+
 async function enterAR() {
 
     screenSelect.hidden = true;
@@ -188,7 +192,86 @@ async function enterAR() {
 
     startGPS();
 
+    await startCompass();
+
     startAREngine();
+
+}
+
+// =====================================================
+// COMPASS
+// =====================================================
+
+// =====================================================
+// COMPASS
+// =====================================================
+
+async function startCompass() {
+
+    if (typeof DeviceOrientationEvent === "undefined") {
+
+        console.warn("DeviceOrientation není podporován.");
+
+        return;
+
+    }
+
+    // iPhone (iOS 13+)
+
+    if (typeof DeviceOrientationEvent.requestPermission === "function") {
+
+        try {
+
+            const permission =
+                await DeviceOrientationEvent.requestPermission();
+
+            if (permission !== "granted") {
+
+                console.warn("Kompas nebyl povolen.");
+
+                return;
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            return;
+
+        }
+
+    }
+
+    window.addEventListener(
+
+        "deviceorientation",
+
+        onOrientation,
+
+        true
+
+    );
+
+    console.log("Compass started.");
+
+}
+
+// =====================================================
+
+
+
+function onOrientation(event) {
+
+    if (event.alpha == null) {
+
+        return;
+
+    }
+
+    currentHeading = event.alpha;
 
 }
 
@@ -303,6 +386,9 @@ function startAREngine() {
 
 // =====================================================
 
+
+// =====================================================
+
 function updateAR() {
 
     if (!currentScenario) {
@@ -337,9 +423,19 @@ function updateAR() {
 
     );
 
+    console.log(
+
+        "Heading:",
+
+        currentHeading == null
+
+            ? "-"
+
+            : Math.round(currentHeading)
+
+    );
+
 }
-
-
 
 // =====================================================
 
