@@ -1,3 +1,5 @@
+throw new Error("APP VERSION 2");
+
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./sw.js");
 }
