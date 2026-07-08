@@ -106,51 +106,59 @@ async function enterAR() {
 
 // =====================================================
 
+// =====================================================
+
 async function startCamera() {
 
-    console.log("1 - startCamera");
+    console.log("Starting camera...");
 
     if (!navigator.mediaDevices?.getUserMedia) {
 
-        throw new Error("Browser nepodporuje getUserMedia");
+        throw new Error("Prohlížeč nepodporuje kameru.");
 
     }
 
-    console.log("2 - getUserMedia");
+    let stream;
 
     try {
 
-        const stream = await navigator.mediaDevices.getUserMedia({
+        console.log("Trying back camera...");
+
+        stream = await navigator.mediaDevices.getUserMedia({
 
             video: {
+
                 facingMode: {
                     ideal: "environment"
                 }
+
             },
 
             audio: false
 
         });
 
-        console.log("3 - stream získán");
+    }
 
-        camera.srcObject = stream;
+    catch (error) {
 
-        console.log("4 - srcObject");
+        console.warn("Back camera failed, trying default camera...", error);
 
-        await camera.play();
+        stream = await navigator.mediaDevices.getUserMedia({
 
-        console.log("5 - play");
+            video: true,
+
+            audio: false
+
+        });
 
     }
 
-    catch (e) {
+    camera.srcObject = stream;
 
-        console.error("Camera error:", e);
+    await camera.play();
 
-        throw e;
-
-    }
+    console.log("Camera started.");
 
 }
 
