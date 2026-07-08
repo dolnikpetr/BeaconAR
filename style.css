@@ -152,3 +152,38 @@ h2 {
     pointer-events: none;
 
 }
+
+/* ===================================================== */
+/* DEBUG HUD */
+/* ===================================================== */
+
+#debugHUD {
+
+    position: absolute;
+
+    top: 20px;
+    left: 20px;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    background: rgba(0,0,0,.65);
+
+    color: white;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+
+    font-family: monospace;
+
+    z-index: 1000;
+
+}
+
+#debugHUD div {
+
+    white-space: nowrap;
+
+}
