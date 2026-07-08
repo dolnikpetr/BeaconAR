@@ -14,6 +14,8 @@
 
 const VERSION = "4";
 
+const CAMERA_FOV = 70;
+
 const API =
     "https://script.google.com/macros/s/AKfycbz3I2onzrPLR7Bcfb-6cbeRtA74hf6utX0YGkIpCV_VKGR4jOPhBhdzzcKatojh6PvZWA/exec";
 
@@ -439,28 +441,24 @@ async function startCompass() {
 function onOrientation(event) {
 
     if (event.alpha == null) {
-
         return;
-
     }
 
     currentHeading = event.alpha;
 
     debugAlpha.textContent =
-        "Alpha: " +
-        Math.round(event.alpha);
+        "Alpha: " + Math.round(event.alpha);
 
     debugBeta.textContent =
-        "Beta: " +
-        Math.round(event.beta);
+        "Beta: " + Math.round(event.beta);
 
     debugGamma.textContent =
-        "Gamma: " +
-        Math.round(event.gamma);
+        "Gamma: " + Math.round(event.gamma);
 
     debugAbsolute.textContent =
-        "Absolute: " +
-        event.absolute;
+        "Absolute: " + event.absolute;
+
+    updateScenario();
 
     updateHUD();
 
@@ -516,6 +514,8 @@ function updateScenario() {
 
     currentScenario.points.forEach(updatePoint);
 
+    render();
+
 }
 
 // =====================================================
@@ -542,8 +542,6 @@ function updatePoint(point) {
 
     );
 
-    // připraveno pro další krok
-
     if (currentHeading != null) {
 
         point.relativeAngle =
@@ -554,13 +552,59 @@ function updatePoint(point) {
 
             );
 
-    }
+        point.visible =
+            Math.abs(point.relativeAngle) <= 45;
 
+        point.screenX =
+            ((point.relativeAngle + 45) / 90) *
+            window.innerWidth;
+
+    }
     else {
 
         point.relativeAngle = null;
+        point.visible = false;
+        point.screenX = 0;
 
     }
+
+    point.screenY =
+        window.innerHeight / 2;
+
+}
+
+
+function render() {
+
+    if (!currentScenario) {
+        return;
+    }
+
+    currentScenario.points.forEach(point => {
+
+        if (!point.element) {
+            return;
+        }
+
+        if (!point.visible) {
+
+            point.element.style.display = "none";
+            return;
+
+        }
+
+        point.element.style.display = "block";
+
+        point.element.style.left =
+            `${point.screenX}px`;
+
+        point.element.style.top =
+            `${point.screenY}px`;
+
+        point.element.style.transform =
+            "translate(-50%, -50%)";
+
+    });
 
 }
 
