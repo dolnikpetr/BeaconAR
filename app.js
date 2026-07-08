@@ -58,10 +58,11 @@ function showScenarioSelector(scenarios) {
     console.log(screenSelect);
     console.log(scenarioList);
 
-    screenLoading.hidden = true;
+    screenLoading.classList.add("hidden");
 
-    screenSelect.hidden = false;
+    screenSelect.classList.remove("hidden");
 
+        
     scenarioList.innerHTML = "";
 
     scenarios.forEach(scenario => {
