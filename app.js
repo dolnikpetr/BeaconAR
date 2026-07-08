@@ -50,6 +50,9 @@ const COLORS = {
 // DOM
 // =====================================================
 
+const pointContainer =
+    document.getElementById("pointContainer");
+
 const screenSelect =
     document.getElementById("screenSelect");
 
@@ -93,7 +96,7 @@ let currentLocation = null;
 
 let currentHeading = null;
 
-let pointContainer;
+
 
 // =====================================================
 
@@ -243,37 +246,38 @@ async function enterAR() {
 
 }
 
+
 function initializeRenderer() {
 
-    if (pointContainer) {
-
-        pointContainer.remove();
-
+    if (!currentScenario) {
+        return;
     }
 
-    pointContainer = document.createElement("div");
-
-    pointContainer.id = "pointContainer";
-
-    screenAR.appendChild(pointContainer);
+    pointContainer.innerHTML = "";
 
     currentScenario.points.forEach(point => {
 
-        const element = document.createElement("div");
+        const element =
+            document.createElement("div");
 
         element.className = "point";
 
-        const icon = ICONS[point.icon] || "📍";
+        element.style.position = "absolute";
+
+        element.style.display = "block";
+
+        element.style.left = "20px";
+
+        element.style.top = "20px";
+
+        const icon =
+            ICONS[point.icon] || "📍";
 
         element.textContent =
             `${icon} ${point.name}`;
 
         element.style.color =
             COLORS[point.color] || "#ffffff";
-
-        element.style.left = "20px";
-
-        element.style.top = "20px";
 
         point.element = element;
 
@@ -282,7 +286,6 @@ function initializeRenderer() {
     });
 
 }
-
 
 // =====================================================
 // CAMERA
@@ -603,8 +606,6 @@ function render() {
             return;
         }
 
-        point.element.style.display = "block";
-
         point.element.style.left =
             `${point.screenX}px`;
 
@@ -614,7 +615,6 @@ function render() {
     });
 
 }
-
 // =====================================================
 
 function normalizeAngle(angle) {
