@@ -301,7 +301,15 @@ function startAREngine() {
 
 // =====================================================
 
+// =====================================================
+
 function updateAR() {
+
+    if (!currentScenario) {
+
+        return;
+
+    }
 
     if (!currentLocation) {
 
@@ -321,7 +329,9 @@ function updateAR() {
 
             name: point.name,
 
-            distance: Math.round(point.distance)
+            distance: Math.round(point.distance),
+
+            bearing: Math.round(point.bearing)
 
         }))
 
@@ -392,6 +402,16 @@ function updatePoint(point) {
 
     );
 
+    point.bearing = calculateBearing(
+
+        currentLocation.latitude,
+        currentLocation.longitude,
+
+        point.lat,
+        point.lng
+
+    );
+
 }
 
 // =====================================================
@@ -437,5 +457,53 @@ function calculateDistance(
         );
 
     return R * c;
+
+}
+
+
+// =====================================================
+
+function calculateBearing(
+
+    lat1,
+    lon1,
+
+    lat2,
+    lon2
+
+) {
+
+    const φ1 = lat1 * Math.PI / 180;
+    const φ2 = lat2 * Math.PI / 180;
+
+    const λ1 = lon1 * Math.PI / 180;
+    const λ2 = lon2 * Math.PI / 180;
+
+    const y =
+
+        Math.sin(λ2 - λ1) *
+        Math.cos(φ2);
+
+    const x =
+
+        Math.cos(φ1) *
+        Math.sin(φ2)
+
+        -
+
+        Math.sin(φ1) *
+        Math.cos(φ2) *
+        Math.cos(λ2 - λ1);
+
+    let bearing =
+
+        Math.atan2(y, x) *
+        180 / Math.PI;
+
+    bearing =
+
+        (bearing + 360) % 360;
+
+    return bearing;
 
 }
