@@ -606,11 +606,21 @@ function render() {
             return;
         }
 
-        point.element.style.left =
-            `${point.screenX}px`;
+        const x =
+            Number.isFinite(point.screenX)
+                ? point.screenX
+                : window.innerWidth / 2;
 
-        point.element.style.top =
-            `${point.screenY}px`;
+        const y =
+            Number.isFinite(point.screenY)
+                ? point.screenY
+                : window.innerHeight / 2;
+
+        point.element.style.display = "block";
+
+        point.element.style.left = `${x}px`;
+
+        point.element.style.top = `${y}px`;
 
     });
 
