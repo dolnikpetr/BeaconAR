@@ -18,6 +18,12 @@ const API =
     "https://script.google.com/macros/s/AKfycbz3I2onzrPLR7Bcfb-6cbeRtA74hf6utX0YGkIpCV_VKGR4jOPhBhdzzcKatojh6PvZWA/exec";
 
 // =====================================================
+// STATE
+// =====================================================
+
+let currentScenario = null;
+
+// =====================================================
 
 const scenarioList =
     document.getElementById("scenarioList");
@@ -42,6 +48,12 @@ async function init() {
 
         const data =
             await response.json();
+
+        if (!data.success) {
+
+            throw new Error("Nepodařilo se načíst seznam scénářů.");
+
+        }
 
         renderScenarioList(data.scenarios);
 
@@ -74,12 +86,56 @@ function renderScenarioList(list) {
 
         button.addEventListener("click", () => {
 
-            alert(scenario.id);
+            loadScenario(scenario.id);
 
         });
 
         scenarioList.appendChild(button);
 
     });
+
+}
+
+// =====================================================
+
+async function loadScenario(id) {
+
+    try {
+
+        const response = await fetch(
+
+            `${API}?action=scenario&id=${encodeURIComponent(id)}&_=${Date.now()}`,
+
+            {
+                cache: "no-store"
+            }
+
+        );
+
+        const data =
+            await response.json();
+
+        if (!data.success) {
+
+            throw new Error(data.error);
+
+        }
+
+        currentScenario = data.scenario;
+
+        console.log(currentScenario);
+
+        // Další krok:
+        // startCamera();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+
+    }
 
 }
