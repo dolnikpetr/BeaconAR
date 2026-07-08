@@ -190,15 +190,5 @@ async function loadScenario(id) {
 }
 
 
-async function enterAR() {
-
-    screenSelect.hidden = true;
-
-    screenAR.hidden = false;
-
-    console.log("AR mode");
-
-    // Další krok:
-    // await startCamera();
 
 }
