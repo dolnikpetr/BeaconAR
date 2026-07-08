@@ -447,16 +447,20 @@ function onOrientation(event) {
     currentHeading = event.alpha;
 
     debugAlpha.textContent =
-        "Alpha: " + Math.round(event.alpha);
+        "Alpha: " +
+        Math.round(event.alpha);
 
     debugBeta.textContent =
-        "Beta: " + Math.round(event.beta);
+        "Beta: " +
+        Math.round(event.beta);
 
     debugGamma.textContent =
-        "Gamma: " + Math.round(event.gamma);
+        "Gamma: " +
+        Math.round(event.gamma);
 
     debugAbsolute.textContent =
-        "Absolute: " + event.absolute;
+        "Absolute: " +
+        event.absolute;
 
     updateScenario();
 
@@ -542,37 +546,50 @@ function updatePoint(point) {
 
     );
 
-    if (currentHeading != null) {
+    if (currentHeading == null) {
 
-        point.relativeAngle =
-            normalizeAngle(
-
-                point.bearing -
-                currentHeading
-
-            );
-
-        point.visible =
-            Math.abs(point.relativeAngle) <= 45;
-
-        point.screenX =
-            ((point.relativeAngle + 45) / 90) *
-            window.innerWidth;
+        point.relativeAngle = 0;
+        point.visible = true;
 
     }
     else {
 
-        point.relativeAngle = null;
-        point.visible = false;
-        point.screenX = 0;
+        point.relativeAngle =
+            normalizeAngle(
+                point.bearing - currentHeading
+            );
+
+        const halfFov =
+            CAMERA_FOV / 2;
+
+        point.visible =
+            Math.abs(point.relativeAngle) <= halfFov;
 
     }
+
+    const halfFov =
+        CAMERA_FOV / 2;
+
+    point.screenX =
+
+        (
+
+            point.relativeAngle + halfFov
+
+        )
+
+        /
+
+        CAMERA_FOV
+
+        *
+
+        window.innerWidth;
 
     point.screenY =
         window.innerHeight / 2;
 
 }
-
 
 function render() {
 
@@ -586,13 +603,6 @@ function render() {
             return;
         }
 
-        if (!point.visible) {
-
-            point.element.style.display = "none";
-            return;
-
-        }
-
         point.element.style.display = "block";
 
         point.element.style.left =
@@ -600,9 +610,6 @@ function render() {
 
         point.element.style.top =
             `${point.screenY}px`;
-
-        point.element.style.transform =
-            "translate(-50%, -50%)";
 
     });
 
