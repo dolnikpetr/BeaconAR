@@ -26,21 +26,37 @@ async function init() {
 
 async function loadScenarios() {
 
-    const response =
-        await fetch(`${API}?action=list`, {
+    try {
+
+        const response = await fetch(`${API}?action=list`, {
 
             cache: "no-store"
 
         });
 
-    const data =
-        await response.json();
+        const data = await response.json();
 
-    showScenarioSelector(data.scenarios);
+        console.log("API:", data);
+
+        showScenarioSelector(data.scenarios);
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        alert(error);
+
+    }
 
 }
-
 function showScenarioSelector(scenarios) {
+
+    console.log("showScenarioSelector()", scenarios);
+
+    console.log(screenLoading);
+    console.log(screenSelect);
+    console.log(scenarioList);
 
     screenLoading.hidden = true;
 
@@ -50,18 +66,13 @@ function showScenarioSelector(scenarios) {
 
     scenarios.forEach(scenario => {
 
-        const button =
-            document.createElement("button");
+        const button = document.createElement("button");
 
-        button.textContent =
-            scenario.name;
+        button.textContent = scenario.name;
 
         button.onclick = () => {
 
-            alert(
-                "Vybraný scénář: " +
-                scenario.id
-            );
+            alert(scenario.id);
 
         };
 
