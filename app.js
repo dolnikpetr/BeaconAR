@@ -81,25 +81,14 @@ async function init() {
 
 // =====================================================
 
+
 async function enterAR() {
 
-    screenSelect.hidden = true;
+    screenSelect.remove();
 
     screenAR.hidden = false;
 
-    try {
-
-        await startCamera();
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        alert(error.message);
-
-    }
+    await startCamera();
 
 }
 
