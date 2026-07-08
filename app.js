@@ -43,6 +43,8 @@ let currentLocation = null;
 
 let gpsWatchId = null;
 
+let arTimer = null;
+
 // =====================================================
 
 window.addEventListener("load", init);
@@ -186,7 +188,10 @@ async function enterAR() {
 
     startGPS();
 
+    startAREngine();
+
 }
+
 
 // =====================================================
 // CAMERA
@@ -271,6 +276,48 @@ function startGPS() {
     );
 
 }
+
+// =====================================================
+// AR ENGINE
+// =====================================================
+
+function startAREngine() {
+
+    if (arTimer) {
+
+        clearInterval(arTimer);
+
+    }
+
+    arTimer = setInterval(
+
+        updateAR,
+
+        3000
+
+    );
+
+}
+
+// =====================================================
+
+function updateAR() {
+
+    if (!currentLocation) {
+
+        console.log("Waiting for GPS...");
+
+        return;
+
+    }
+
+    console.log("AR Update");
+
+    console.log(currentLocation);
+
+}
+
+
 
 // =====================================================
 
