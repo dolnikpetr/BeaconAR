@@ -311,9 +311,21 @@ function updateAR() {
 
     }
 
-    console.log("AR Update");
+    updateScenario();
 
-    console.log(currentLocation);
+    console.clear();
+
+    console.table(
+
+        currentScenario.points.map(point => ({
+
+            name: point.name,
+
+            distance: Math.round(point.distance)
+
+        }))
+
+    );
 
 }
 
@@ -348,3 +360,37 @@ function onPositionError(error) {
     console.error(error);
 
 }
+
+
+// =====================================================
+
+function updateScenario() {
+
+    if (!currentScenario) {
+        return;
+    }
+
+    if (!currentLocation) {
+        return;
+    }
+
+    currentScenario.points.forEach(updatePoint);
+
+}
+
+// =====================================================
+
+function updatePoint(point) {
+
+    point.distance = calculateDistance(
+
+        currentLocation.latitude,
+        currentLocation.longitude,
+
+        point.lat,
+        point.lng
+
+    );
+
+}
+
