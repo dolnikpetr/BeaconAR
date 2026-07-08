@@ -12,8 +12,6 @@
 
     <title>Beacon AR</title>
 
-    <link rel="manifest" href="manifest.json">
-
     <meta name="theme-color" content="#000000">
 
     <meta name="mobile-web-app-capable" content="yes">
@@ -22,9 +20,11 @@
 
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+    <link rel="manifest" href="manifest.json?v=1">
+
     <link rel="icon" href="icon-192.png">
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1">
 
 </head>
 
@@ -39,26 +39,26 @@
         autoplay
         muted
         playsinline
-        class="hidden"
+        hidden
     ></video>
-
 
     <!-- ===================================================== -->
     <!-- SELECT SCENARIO -->
     <!-- ===================================================== -->
 
-    <section
-        id="screenSelect"
-        class="screen hidden"
-    >
+    <section id="screenSelect">
 
         <h1>Vyber scénář</h1>
 
-        <div id="scenarioList"></div>
+        <div id="scenarioList">
+
+            <p>Načítám scénáře...</p>
+
+        </div>
 
     </section>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=1"></script>
 
 </body>
 
