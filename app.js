@@ -87,7 +87,39 @@ async function enterAR() {
 
     screenAR.hidden = false;
 
-    console.log("AR mode");
+    await startCamera();
+
+    console.log("Camera started");
+
+}
+
+// =====================================================
+
+async function startCamera() {
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+
+        throw new Error("Tento prohlížeč nepodporuje kameru.");
+
+    }
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+
+        video: {
+
+            facingMode: {
+                ideal: "environment"
+            }
+
+        },
+
+        audio: false
+
+    });
+
+    camera.srcObject = stream;
+
+    await camera.play();
 
 }
 
