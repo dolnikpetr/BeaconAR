@@ -1,7 +1,3 @@
-/* ===================================================== */
-/* RESET */
-/* ===================================================== */
-
 * {
 
     margin: 0;
@@ -26,11 +22,22 @@ body {
 
 }
 
-/* ===================================================== */
-/* SCREENS */
-/* ===================================================== */
+#camera {
 
-.screen {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: none;
+
+}
+
+#screenSelect {
 
     position: fixed;
 
@@ -44,58 +51,17 @@ body {
 
     align-items: center;
 
-    gap: 20px;
+    gap: 24px;
 
     padding: 30px;
 
 }
 
-.screen.hidden {
-
-    display: none !important;
-
-}
-
-/* ===================================================== */
-/* CAMERA */
-/* ===================================================== */
-
-#camera {
-
-    position: fixed;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-
-}
-
-/* ===================================================== */
-/* HEADINGS */
-/* ===================================================== */
-
 h1 {
 
     font-size: 42px;
 
-    font-weight: bold;
-
 }
-
-h2 {
-
-    font-size: 24px;
-
-    font-weight: normal;
-
-}
-
-/* ===================================================== */
-/* SCENARIO LIST */
-/* ===================================================== */
 
 #scenarioList {
 
@@ -109,39 +75,16 @@ h2 {
 
 }
 
-/* ===================================================== */
-/* BUTTONS */
-/* ===================================================== */
-
 #scenarioList button {
 
-    padding: 16px 20px;
+    padding: 16px;
 
     border: none;
 
-    border-radius: 12px;
-
-    background: white;
-
-    color: black;
+    border-radius: 10px;
 
     font-size: 18px;
 
     cursor: pointer;
-
-    transition: transform .15s ease,
-                background .15s ease;
-
-}
-
-#scenarioList button:hover {
-
-    background: #f0f0f0;
-
-}
-
-#scenarioList button:active {
-
-    transform: scale(.98);
 
 }
