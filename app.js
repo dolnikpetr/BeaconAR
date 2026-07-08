@@ -204,10 +204,6 @@ async function enterAR() {
 // COMPASS
 // =====================================================
 
-// =====================================================
-// COMPASS
-// =====================================================
-
 async function startCompass() {
 
     if (typeof DeviceOrientationEvent === "undefined") {
@@ -218,34 +214,15 @@ async function startCompass() {
 
     }
 
-    // iPhone (iOS 13+)
+    window.addEventListener(
 
-    if (typeof DeviceOrientationEvent.requestPermission === "function") {
+        "deviceorientationabsolute",
 
-        try {
+        onOrientation,
 
-            const permission =
-                await DeviceOrientationEvent.requestPermission();
+        true
 
-            if (permission !== "granted") {
-
-                console.warn("Kompas nebyl povolen.");
-
-                return;
-
-            }
-
-        }
-
-        catch (error) {
-
-            console.error(error);
-
-            return;
-
-        }
-
-    }
+    );
 
     window.addEventListener(
 
@@ -261,14 +238,30 @@ async function startCompass() {
 
 }
 
-// =====================================================
 
+// =====================================================
 
 
 
 function onOrientation(event) {
 
-    if (event.alpha == null) {
+    let heading = null;
+
+    // Android Chrome (Pixel)
+    if (event.absolute && event.alpha != null) {
+
+        heading = event.alpha;
+
+    }
+
+    // Fallback
+    else if (event.alpha != null) {
+
+        heading = event.alpha;
+
+    }
+
+    if (heading == null) {
 
         compassAvailable = false;
 
@@ -278,10 +271,20 @@ function onOrientation(event) {
 
     compassAvailable = true;
 
-    currentHeading = event.alpha;
+    currentHeading = normalizeHeading(heading);
 
 }
 
+
+// =====================================================
+
+function normalizeHeading(heading) {
+
+    heading = (360 - heading) % 360;
+
+    return heading;
+
+}
 
 // =====================================================
 // CAMERA
