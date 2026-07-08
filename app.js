@@ -31,7 +31,10 @@ async function loadScenarios() {
 
         console.log("Calling:", url);
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            method: "GET",
+            redirect: "follow"
+        });
 
         console.log("Status:", response.status);
         console.log("OK:", response.ok);
