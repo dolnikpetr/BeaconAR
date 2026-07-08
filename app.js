@@ -205,6 +205,3 @@ async function loadScenario(id) {
 
 }
 
-
-
-}
