@@ -47,18 +47,11 @@ async function loadScenarios() {
     }
 
 }
+
 function showScenarioSelector(scenarios) {
 
-    console.log("showScenarioSelector()", scenarios);
-
-    console.log(screenLoading);
-    console.log(screenSelect);
-    console.log(scenarioList);
-
-    
     screenSelect.classList.remove("hidden");
 
-        
     scenarioList.innerHTML = "";
 
     scenarios.forEach(scenario => {
