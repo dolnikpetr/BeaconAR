@@ -257,24 +257,19 @@ function initializeRenderer() {
 
     currentScenario.points.forEach(point => {
 
-        const element =
-            document.createElement("div");
+        const element = document.createElement("div");
 
         element.className = "point";
-
-        element.style.position = "absolute";
-
-        element.style.display = "block";
-
-        element.style.left = "20px";
-
-        element.style.top = "20px";
 
         const icon =
             ICONS[point.icon] || "📍";
 
         element.textContent =
             `${icon} ${point.name}`;
+
+        element.style.position = "absolute";
+
+        element.style.display = "block";
 
         element.style.color =
             COLORS[point.color] || "#ffffff";
@@ -284,6 +279,8 @@ function initializeRenderer() {
         pointContainer.appendChild(element);
 
     });
+
+    render();
 
 }
 
