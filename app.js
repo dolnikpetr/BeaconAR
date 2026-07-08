@@ -97,32 +97,51 @@ async function enterAR() {
 
 async function startCamera() {
 
+    console.log("1 - startCamera");
+
     if (!navigator.mediaDevices?.getUserMedia) {
 
-        throw new Error("Tento prohlížeč nepodporuje kameru.");
+        throw new Error("Browser nepodporuje getUserMedia");
 
     }
 
-    const stream = await navigator.mediaDevices.getUserMedia({
+    console.log("2 - getUserMedia");
 
-        video: {
+    try {
 
-            facingMode: {
-                ideal: "environment"
-            }
+        const stream = await navigator.mediaDevices.getUserMedia({
 
-        },
+            video: {
+                facingMode: {
+                    ideal: "environment"
+                }
+            },
 
-        audio: false
+            audio: false
 
-    });
+        });
 
-    camera.srcObject = stream;
+        console.log("3 - stream získán");
 
-    await camera.play();
+        camera.srcObject = stream;
+
+        console.log("4 - srcObject");
+
+        await camera.play();
+
+        console.log("5 - play");
+
+    }
+
+    catch (e) {
+
+        console.error("Camera error:", e);
+
+        throw e;
+
+    }
 
 }
-
 
 function renderScenarioList(list) {
 
