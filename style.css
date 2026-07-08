@@ -36,7 +36,6 @@ body {
 
 }
 
-
 /* ===================================================== */
 /* SELECT SCREEN */
 /* ===================================================== */
@@ -137,6 +136,8 @@ h2 {
 
     object-fit: cover;
 
+    z-index: 1;
+
 }
 
 /* ===================================================== */
@@ -151,6 +152,41 @@ h2 {
 
     pointer-events: none;
 
+    z-index: 10;
+
+}
+
+/* ===================================================== */
+/* POINTS */
+/* ===================================================== */
+
+#pointContainer {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+}
+
+.point {
+
+    position: absolute;
+
+    transform: translate(-50%, -50%);
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+    white-space: nowrap;
+
+    text-shadow:
+        0 0 5px #000,
+        0 0 10px #000,
+        0 0 15px #000;
+
 }
 
 /* ===================================================== */
@@ -162,6 +198,7 @@ h2 {
     position: absolute;
 
     top: 20px;
+
     left: 20px;
 
     padding: 12px;
@@ -186,29 +223,4 @@ h2 {
 
     white-space: nowrap;
 
-}
-
-#pointContainer{
-
-    position:absolute;
-
-    inset:0;
-
-    pointer-events:none;
-
-}
-
-.point{
-
-    position:absolute;
-
-    font-size:28px;
-
-    font-weight:bold;
-
-    white-space:nowrap;
-
-    text-shadow:
-        0 0 5px #000,
-        0 0 10px #000;
 }
