@@ -210,6 +210,7 @@ async function enterAR() {
 
 }
 
+
 // =====================================================
 // COMPASS
 // =====================================================
@@ -352,9 +353,11 @@ async function startCamera() {
 
 function startGPS() {
 
+    console.log("Starting GPS...");
+
     if (!navigator.geolocation) {
 
-        console.warn("GPS není podporována.");
+        console.error("Geolocation není podporována.");
 
         return;
 
@@ -377,6 +380,8 @@ function startGPS() {
         }
 
     );
+
+    console.log("GPS Watch ID:", gpsWatchId);
 
 }
 
@@ -460,6 +465,8 @@ function updateAR() {
 
 function onPosition(position) {
 
+    console.log("GPS OK");
+
     currentLocation = {
 
         latitude: position.coords.latitude,
@@ -482,7 +489,21 @@ function onPosition(position) {
 
 function onPositionError(error) {
 
+    console.error("GPS ERROR");
+
     console.error(error);
+
+    alert(
+
+        "GPS: " +
+
+        error.code +
+
+        " - " +
+
+        error.message
+
+    );
 
 }
 
