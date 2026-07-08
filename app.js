@@ -4,6 +4,9 @@ if ("serviceWorker" in navigator) {
         .catch(console.error);
 }
 
+const API =
+    "https://script.google.com/macros/s/AKfycbz3I2onzrPLR7Bcfb-6cbeRtA74hf6utX0YGkIpCV_VKGR4jOPhBhdzzcKatojh6PvZWA/exec";
+
 const camera =
     document.getElementById("camera")
 
