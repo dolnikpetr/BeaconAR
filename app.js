@@ -12,6 +12,15 @@
 // CONFIG
 // =====================================================
 
+const screenSelect =
+    document.getElementById("screenSelect");
+
+const screenAR =
+    document.getElementById("screenAR");
+
+const camera =
+    document.getElementById("camera");
+
 const VERSION = "1";
 
 const API =
@@ -72,6 +81,17 @@ async function init() {
 
 // =====================================================
 
+async function enterAR() {
+
+    screenSelect.hidden = true;
+
+    screenAR.hidden = false;
+
+    console.log("AR mode");
+
+}
+
+
 function renderScenarioList(list) {
 
     scenarioList.innerHTML = "";
@@ -125,8 +145,7 @@ async function loadScenario(id) {
 
         console.log(currentScenario);
 
-        // Další krok:
-        // startCamera();
+        await enterAR();
 
     }
 
@@ -137,5 +156,18 @@ async function loadScenario(id) {
         alert(error.message);
 
     }
+
+}
+
+async function enterAR() {
+
+    screenSelect.hidden = true;
+
+    screenAR.hidden = false;
+
+    console.log("AR mode");
+
+    // Další krok:
+    // await startCamera();
 
 }
