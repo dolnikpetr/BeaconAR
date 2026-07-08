@@ -33,26 +33,26 @@ async function loadScenarios() {
 
         const response = await fetch(url, {
             method: "GET",
-            redirect: "follow"
+            mode: "cors",
+            redirect: "follow",
+            cache: "no-store"
         });
 
-        console.log("Status:", response.status);
-        console.log("OK:", response.ok);
-        console.log("Headers:", [...response.headers.entries()]);
+        console.log(response);
 
-        const text = await response.text();
+        const data = await response.json();
 
-        console.log("RAW RESPONSE:");
-        console.log(text);
+        console.log(data);
 
-        status.textContent = "Odpověď přijata.";
+        status.textContent = "Hotovo";
 
     }
     catch (error) {
 
         console.error(error);
 
-        status.textContent = error.name + ": " + error.message;
+        status.textContent =
+            error.name + ": " + error.message;
 
     }
 
