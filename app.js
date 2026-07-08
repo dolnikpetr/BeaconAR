@@ -619,6 +619,17 @@ function render() {
                 ? point.screenY
                 : window.innerHeight / 2;
 
+        const distance =
+            Number.isFinite(point.distance)
+                ? Math.round(point.distance)
+                : "...";
+
+        const icon =
+            ICONS[point.icon] || "📍";
+
+        point.element.textContent =
+            `${icon} ${point.name} (${distance} m)`;
+
         point.element.style.display = "block";
 
         point.element.style.left = `${x}px`;
