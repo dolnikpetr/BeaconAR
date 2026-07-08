@@ -1,21 +1,27 @@
 if ("serviceWorker" in navigator) {
-
     navigator.serviceWorker.register("./sw.js");
-
 }
 
 const API =
     "https://script.google.com/macros/s/AKfycbz3I2onzrPLR7Bcfb-6cbeRtA74hf6utX0YGkIpCV_VKGR4jOPhBhdzzcKatojh6PvZWA/exec";
 
-const screenSelect =
-    document.getElementById("screenSelect");
+let screenSelect;
+let scenarioList;
 
-const scenarioList =
-    document.getElementById("scenarioList");
-
-init();
+document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
+
+    screenSelect = document.getElementById("screenSelect");
+    scenarioList = document.getElementById("scenarioList");
+
+    if (!screenSelect) {
+        throw new Error("Element #screenSelect nebyl nalezen.");
+    }
+
+    if (!scenarioList) {
+        throw new Error("Element #scenarioList nebyl nalezen.");
+    }
 
     await loadScenarios();
 
@@ -23,28 +29,13 @@ async function init() {
 
 async function loadScenarios() {
 
-    try {
+    const response = await fetch(`${API}?action=list`, {
+        cache: "no-store"
+    });
 
-        const response = await fetch(`${API}?action=list`, {
+    const data = await response.json();
 
-            cache: "no-store"
-
-        });
-
-        const data = await response.json();
-
-        console.log("API:", data);
-
-        showScenarioSelector(data.scenarios);
-
-    }
-    catch (error) {
-
-        console.error(error);
-
-        alert(error);
-
-    }
+    showScenarioSelector(data.scenarios);
 
 }
 
@@ -60,11 +51,9 @@ function showScenarioSelector(scenarios) {
 
         button.textContent = scenario.name;
 
-        button.onclick = () => {
-
+        button.addEventListener("click", () => {
             alert(scenario.id);
-
-        };
+        });
 
         scenarioList.appendChild(button);
 
