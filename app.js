@@ -84,6 +84,7 @@ async function init() {
 async function enterAR() {
 
     screenSelect.hidden = true;
+
     screenAR.hidden = false;
 
     try {
@@ -96,8 +97,7 @@ async function enterAR() {
 
         console.error(error);
 
-        // zatím jen zalogujeme
-        // později zobrazíme hlášku
+        alert(error.message);
 
     }
 
