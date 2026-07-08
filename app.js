@@ -256,33 +256,19 @@ async function startCompass() {
 
 function onOrientation(event) {
 
-    let heading = null;
+    console.clear();
 
-    // Android Chrome (Pixel)
-    if (event.absolute && event.alpha != null) {
+    console.table({
 
-        heading = event.alpha;
+        alpha: event.alpha,
 
-    }
+        beta: event.beta,
 
-    // Fallback
-    else if (event.alpha != null) {
+        gamma: event.gamma,
 
-        heading = event.alpha;
+        absolute: event.absolute
 
-    }
-
-    if (heading == null) {
-
-        compassAvailable = false;
-
-        return;
-
-    }
-
-    compassAvailable = true;
-
-    currentHeading = normalizeHeading(heading);
+    });
 
 }
 
