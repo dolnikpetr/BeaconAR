@@ -444,7 +444,13 @@ function onOrientation(event) {
         return;
     }
 
-    currentHeading = event.alpha;
+    // Převod alpha -> klasický heading
+    currentHeading = (360 - event.alpha) % 360;
+
+    debugHeading.textContent =
+        "Heading: " +
+        Math.round(currentHeading) +
+        "°";
 
     debugAlpha.textContent =
         "Alpha: " +
