@@ -12,7 +12,7 @@
 // CONFIG
 // =====================================================
 
-const VERSION = "3";
+const VERSION = "4";
 
 const API =
     "https://script.google.com/macros/s/AKfycbz3I2onzrPLR7Bcfb-6cbeRtA74hf6utX0YGkIpCV_VKGR4jOPhBhdzzcKatojh6PvZWA/exec";
@@ -62,13 +62,7 @@ let currentScenario = null;
 
 let currentLocation = null;
 
-let gpsWatchId = null;
-
-let arTimer = null;
-
 let currentHeading = null;
-
-let compassAvailable = false;
 
 // =====================================================
 
@@ -92,12 +86,11 @@ async function init() {
 
         );
 
-        const data =
-            await response.json();
+        const data = await response.json();
 
         if (!data.success) {
 
-            throw new Error("Nepodařilo se načíst seznam scénářů.");
+            throw new Error("Nepodařilo se načíst scénáře.");
 
         }
 
@@ -132,11 +125,13 @@ function renderScenarioList(list) {
         button.textContent =
             scenario.name;
 
-        button.addEventListener("click", () => {
+        button.addEventListener(
 
-            loadScenario(scenario.id);
+            "click",
 
-        });
+            () => loadScenario(scenario.id)
+
+        );
 
         scenarioList.appendChild(button);
 
@@ -173,8 +168,6 @@ async function loadScenario(id) {
 
         currentScenario = data.scenario;
 
-        console.log(currentScenario);
-
         await enterAR();
 
     }
@@ -191,8 +184,6 @@ async function loadScenario(id) {
 
 // =====================================================
 // AR
-// =====================================================
-
 // =====================================================
 
 async function enterAR() {
@@ -217,140 +208,6 @@ async function enterAR() {
 
     await startCompass();
 
-    startAREngine();
-
-}
-
-
-// =====================================================
-// COMPASS
-// =====================================================
-
-async function startCompass() {
-
-    if (typeof DeviceOrientationEvent === "undefined") {
-
-        console.warn("DeviceOrientation není podporován.");
-
-        return;
-
-    }
-
-    if ("ondeviceorientationabsolute" in window) {
-
-        console.log("Using deviceorientationabsolute");
-
-        window.addEventListener(
-
-            "deviceorientationabsolute",
-
-            onOrientation,
-
-            true
-
-        );
-
-    }
-
-    else {
-
-        console.log("Using deviceorientation");
-
-        window.addEventListener(
-
-            "deviceorientation",
-
-            onOrientation,
-
-            true
-
-        );
-
-    }
-
-}
-
-
-// =====================================================
-
-
-
-// =====================================================
-
-function onOrientation(event) {
-
-    debugAlpha.textContent =
-        "Alpha: " +
-
-        (
-
-            event.alpha == null
-
-                ? "-"
-
-                : Math.round(event.alpha)
-
-        );
-
-    debugBeta.textContent =
-        "Beta: " +
-
-        (
-
-            event.beta == null
-
-                ? "-"
-
-                : Math.round(event.beta)
-
-        );
-
-    debugGamma.textContent =
-        "Gamma: " +
-
-        (
-
-            event.gamma == null
-
-                ? "-"
-
-                : Math.round(event.gamma)
-
-        );
-
-    debugAbsolute.textContent =
-        "Absolute: " +
-
-        (
-
-            event.absolute === true
-
-                ? "true"
-
-                : "false"
-
-        );
-
-    if (event.alpha == null) {
-
-        return;
-
-    }
-
-    currentHeading =
-        normalizeHeading(event.alpha);
-
-}
-
-
-// =====================================================
-
-function normalizeHeading(heading) {
-
-    heading = (360 - heading) % 360;
-
-    return heading;
-
 }
 
 // =====================================================
@@ -374,7 +231,9 @@ async function startCamera() {
             video: {
 
                 facingMode: {
+
                     ideal: "environment"
+
                 }
 
             },
@@ -409,17 +268,15 @@ async function startCamera() {
 
 function startGPS() {
 
-    console.log("Starting GPS...");
-
     if (!navigator.geolocation) {
 
-        console.error("Geolocation není podporována.");
+        console.error("GPS není podporována.");
 
         return;
 
     }
 
-    gpsWatchId = navigator.geolocation.watchPosition(
+    navigator.geolocation.watchPosition(
 
         onPosition,
 
@@ -437,91 +294,11 @@ function startGPS() {
 
     );
 
-    console.log("GPS Watch ID:", gpsWatchId);
-
-}
-
-// =====================================================
-// AR ENGINE
-// =====================================================
-
-function startAREngine() {
-
-    if (arTimer) {
-
-        clearInterval(arTimer);
-
-    }
-
-    arTimer = setInterval(
-
-        updateAR,
-
-        3000
-
-    );
-
-}
-
-// =====================================================
-
-// =====================================================
-
-
-// =====================================================
-
-// =====================================================
-
-// =====================================================
-
-function updateAR() {
-
-    if (!currentScenario) {
-
-        return;
-
-    }
-
-    if (!currentLocation) {
-
-        debugGps.textContent = "GPS: čekám...";
-
-        return;
-
-    }
-
-    updateScenario();
-
-    debugGps.textContent =
-        "GPS: ±" +
-        Math.round(currentLocation.accuracy) +
-        " m";
-
-    debugHeading.textContent =
-        "Heading: " +
-
-        (
-
-            currentHeading == null
-
-                ? "-"
-
-                : Math.round(currentHeading) + "°"
-
-        );
-
-    debugPoints.textContent =
-        "Points: " +
-
-        currentScenario.points.length;
-
 }
 
 // =====================================================
 
 function onPosition(position) {
-
-    console.log("GPS OK");
 
     currentLocation = {
 
@@ -537,7 +314,9 @@ function onPosition(position) {
 
     };
 
-    console.log(currentLocation);
+    updateScenario();
+
+    updateHUD();
 
 }
 
@@ -545,25 +324,112 @@ function onPosition(position) {
 
 function onPositionError(error) {
 
-    console.error("GPS ERROR");
-
     console.error(error);
 
-    alert(
+}
 
-        "GPS: " +
+// =====================================================
+// COMPASS
+// =====================================================
 
-        error.code +
+async function startCompass() {
 
-        " - " +
+    if (typeof DeviceOrientationEvent === "undefined") {
 
-        error.message
+        console.warn("Kompas není podporován.");
+
+        return;
+
+    }
+
+    const eventName =
+
+        "ondeviceorientationabsolute" in window
+
+            ? "deviceorientationabsolute"
+
+            : "deviceorientation";
+
+    window.addEventListener(
+
+        eventName,
+
+        onOrientation,
+
+        true
 
     );
 
 }
 
+// =====================================================
 
+function onOrientation(event) {
+
+    if (event.alpha == null) {
+
+        return;
+
+    }
+
+    currentHeading = event.alpha;
+
+    debugAlpha.textContent =
+        "Alpha: " +
+        Math.round(event.alpha);
+
+    debugBeta.textContent =
+        "Beta: " +
+        Math.round(event.beta);
+
+    debugGamma.textContent =
+        "Gamma: " +
+        Math.round(event.gamma);
+
+    debugAbsolute.textContent =
+        "Absolute: " +
+        event.absolute;
+
+    updateHUD();
+
+}
+
+// =====================================================
+// HUD
+// =====================================================
+
+function updateHUD() {
+
+    if (currentLocation) {
+
+        debugGps.textContent =
+            "GPS: ±" +
+            Math.round(currentLocation.accuracy) +
+            " m";
+
+    }
+
+    if (currentHeading != null) {
+
+        debugHeading.textContent =
+            "Heading: " +
+            Math.round(currentHeading) +
+            "°";
+
+    }
+
+    if (currentScenario) {
+
+        debugPoints.textContent =
+            "Points: " +
+            currentScenario.points.length;
+
+    }
+
+}
+
+// =====================================================
+// SCENARIO UPDATE
 // =====================================================
 
 function updateScenario() {
@@ -604,6 +470,46 @@ function updatePoint(point) {
 
     );
 
+    // připraveno pro další krok
+
+    if (currentHeading != null) {
+
+        point.relativeAngle =
+            normalizeAngle(
+
+                point.bearing -
+                currentHeading
+
+            );
+
+    }
+
+    else {
+
+        point.relativeAngle = null;
+
+    }
+
+}
+
+// =====================================================
+
+function normalizeAngle(angle) {
+
+    while (angle > 180) {
+
+        angle -= 360;
+
+    }
+
+    while (angle < -180) {
+
+        angle += 360;
+
+    }
+
+    return angle;
+
 }
 
 // =====================================================
@@ -642,16 +548,20 @@ function calculateDistance(
         Math.sin(dLon / 2);
 
     const c =
+
         2 *
+
         Math.atan2(
+
             Math.sqrt(a),
+
             Math.sqrt(1 - a)
+
         );
 
     return R * c;
 
 }
-
 
 // =====================================================
 
@@ -665,36 +575,69 @@ function calculateBearing(
 
 ) {
 
-    const φ1 = lat1 * Math.PI / 180;
-    const φ2 = lat2 * Math.PI / 180;
+    const φ1 =
+        lat1 * Math.PI / 180;
 
-    const λ1 = lon1 * Math.PI / 180;
-    const λ2 = lon2 * Math.PI / 180;
+    const φ2 =
+        lat2 * Math.PI / 180;
+
+    const λ1 =
+        lon1 * Math.PI / 180;
+
+    const λ2 =
+        lon2 * Math.PI / 180;
 
     const y =
 
-        Math.sin(λ2 - λ1) *
+        Math.sin(
+
+            λ2 - λ1
+
+        ) *
+
         Math.cos(φ2);
 
     const x =
 
         Math.cos(φ1) *
+
         Math.sin(φ2)
 
         -
 
         Math.sin(φ1) *
+
         Math.cos(φ2) *
-        Math.cos(λ2 - λ1);
+
+        Math.cos(
+
+            λ2 - λ1
+
+        );
 
     let bearing =
 
-        Math.atan2(y, x) *
-        180 / Math.PI;
+        Math.atan2(
+
+            y,
+
+            x
+
+        ) *
+
+        180 /
+
+        Math.PI;
 
     bearing =
 
-        (bearing + 360) % 360;
+        (
+
+            bearing + 360
+
+        ) %
+
+        360;
 
     return bearing;
 
