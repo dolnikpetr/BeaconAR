@@ -47,6 +47,8 @@ let arTimer = null;
 
 let currentHeading = null;
 
+let compassAvailable = false;
+
 // =====================================================
 
 window.addEventListener("load", init);
@@ -263,13 +265,18 @@ async function startCompass() {
 
 
 
+
 function onOrientation(event) {
 
     if (event.alpha == null) {
 
+        compassAvailable = false;
+
         return;
 
     }
+
+    compassAvailable = true;
 
     currentHeading = event.alpha;
 
@@ -389,6 +396,8 @@ function startAREngine() {
 
 // =====================================================
 
+// =====================================================
+
 function updateAR() {
 
     if (!currentScenario) {
@@ -409,6 +418,36 @@ function updateAR() {
 
     console.clear();
 
+    console.log("GPS");
+
+    console.table([{
+
+        latitude: currentLocation.latitude.toFixed(6),
+
+        longitude: currentLocation.longitude.toFixed(6),
+
+        accuracy: Math.round(currentLocation.accuracy)
+
+    }]);
+
+    console.log("Compass");
+
+    console.table([{
+
+        available: compassAvailable,
+
+        heading:
+
+            currentHeading == null
+
+                ? "-"
+
+                : Math.round(currentHeading)
+
+    }]);
+
+    console.log("Points");
+
     console.table(
 
         currentScenario.points.map(point => ({
@@ -420,18 +459,6 @@ function updateAR() {
             bearing: Math.round(point.bearing)
 
         }))
-
-    );
-
-    console.log(
-
-        "Heading:",
-
-        currentHeading == null
-
-            ? "-"
-
-            : Math.round(currentHeading)
 
     );
 
