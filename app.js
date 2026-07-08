@@ -83,13 +83,14 @@ async function init() {
 
 async function enterAR() {
 
-    alert("enterAR");
+    screenSelect.hidden = true;
 
-    screenSelect.style.display = "none";
+    screenAR.hidden = false;
 
-    screenAR.style.display = "block";
+    await startCamera();
 
 }
+
 // =====================================================
 
 async function startCamera() {
