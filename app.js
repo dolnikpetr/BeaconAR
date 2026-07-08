@@ -84,12 +84,25 @@ async function init() {
 async function enterAR() {
 
     screenSelect.hidden = true;
-
     screenAR.hidden = false;
 
-    await startCamera();
+    try {
+
+        await startCamera();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        // zatím jen zalogujeme
+        // později zobrazíme hlášku
+
+    }
 
 }
+
 
 // =====================================================
 
