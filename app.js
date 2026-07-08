@@ -8,52 +8,45 @@ const API =
     "https://script.google.com/macros/s/AKfycbz3I2onzrPLR7Bcfb-6cbeRtA74hf6utX0YGkIpCV_VKGR4jOPhBhdzzcKatojh6PvZWA/exec";
 
 const camera =
-    document.getElementById("camera")
+    document.getElementById("camera");
 
 const status =
-    document.getElementById("status")
+    document.getElementById("status");
 
-init()
+init();
 
 async function init() {
 
-    status.textContent =
-        "Žádám o přístup ke kameře..."
+    status.textContent = "Načítám scénáře...";
+
+    await loadScenarios();
+
+}
+
+async function loadScenarios() {
 
     try {
 
-        const stream =
-            await navigator.mediaDevices.getUserMedia({
+        const response =
+            await fetch(`${API}?action=list`);
 
-                video: {
+        console.log("Response:", response);
 
-                    facingMode: {
+        const data =
+            await response.json();
 
-                        ideal: "environment"
-
-                    }
-
-                },
-
-                audio: false
-
-            })
-
-        camera.srcObject = stream
-
-        await camera.play()
+        console.log("Data:", data);
 
         status.textContent =
-            "✅ Kamera běží"
+            "Scénáře načteny.";
 
     }
-
     catch (error) {
 
-        console.error(error)
+        console.error(error);
 
         status.textContent =
-            error.name + ": " + error.message
+            error.message;
 
     }
 
