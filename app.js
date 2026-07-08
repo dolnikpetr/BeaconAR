@@ -1,59 +1,76 @@
-throw new Error("APP VERSION 2");
+// =====================================================
+// DEVELOPMENT
+// =====================================================
 
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js");
-}
+// Během vývoje nechceme Service Worker.
+
+// if ("serviceWorker" in navigator) {
+//     navigator.serviceWorker.register("./sw.js");
+// }
+
+// =====================================================
+// CONFIG
+// =====================================================
+
+const VERSION = "1";
 
 const API =
     "https://script.google.com/macros/s/AKfycbz3I2onzrPLR7Bcfb-6cbeRtA74hf6utX0YGkIpCV_VKGR4jOPhBhdzzcKatojh6PvZWA/exec";
 
-const screenSelect =
-    document.getElementById("screenSelect");
+// =====================================================
 
 const scenarioList =
     document.getElementById("scenarioList");
 
-init();
+window.addEventListener("load", init);
+
+// =====================================================
 
 async function init() {
 
-    await loadScenarios();
-
-}
-
-async function loadScenarios() {
-
     try {
 
-        const response = await fetch(`${API}?action=list`, {
-            cache: "no-store"
-        });
+        const response = await fetch(
 
-        const data = await response.json();
+            `${API}?action=list&_=${Date.now()}`,
 
-        showScenarioSelector(data.scenarios);
+            {
+                cache: "no-store"
+            }
+
+        );
+
+        const data =
+            await response.json();
+
+        renderScenarioList(data.scenarios);
 
     }
+
     catch (error) {
 
         console.error(error);
-        alert(error);
+
+        scenarioList.innerHTML =
+            "<p>Nepodařilo se načíst scénáře.</p>";
 
     }
 
 }
 
-function showScenarioSelector(scenarios) {
+// =====================================================
 
-    screenSelect.classList.remove("hidden");
+function renderScenarioList(list) {
 
     scenarioList.innerHTML = "";
 
-    scenarios.forEach(scenario => {
+    list.forEach(scenario => {
 
-        const button = document.createElement("button");
+        const button =
+            document.createElement("button");
 
-        button.textContent = scenario.name;
+        button.textContent =
+            scenario.name;
 
         button.addEventListener("click", () => {
 
