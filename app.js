@@ -150,46 +150,45 @@ function renderScenarioList(list) {
 
 // =====================================================
 
+
 async function loadScenario(id) {
+
+    console.log("Loading scenario:", id);
 
     try {
 
         const response = await fetch(
-
             `${API}?action=scenario&id=${encodeURIComponent(id)}&_=${Date.now()}`,
-
             {
                 cache: "no-store"
             }
-
         );
 
-        const data =
-            await response.json();
+        console.log("Response:", response);
+
+        const data = await response.json();
+
+        console.log("Data:", data);
 
         if (!data.success) {
-
             throw new Error(data.error);
-
         }
 
         currentScenario = data.scenario;
 
-        console.log(currentScenario);
+        console.log("Current scenario:", currentScenario);
 
         await enterAR();
 
     }
-
     catch (error) {
 
         console.error(error);
 
-        alert(error.message);
-
     }
 
 }
+
 
 async function enterAR() {
 
