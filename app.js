@@ -1,3 +1,9 @@
+if ("serviceWorker" in navigator) {
+
+    navigator.serviceWorker.register("./sw.js")
+
+}
+
 const camera =
     document.getElementById("camera")
 
