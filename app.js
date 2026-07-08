@@ -42,6 +42,17 @@ const debugHeading =
 const debugPoints =
     document.getElementById("debugPoints");
 
+const debugAlpha =
+    document.getElementById("debugAlpha");
+
+const debugAbsolute =
+    document.getElementById("debugAbsolute");
+
+const debugBeta =
+    document.getElementById("debugBeta");
+
+const debugGamma =
+    document.getElementById("debugGamma");
 
 // =====================================================
 // STATE
@@ -254,21 +265,70 @@ async function startCompass() {
 
 
 
+// =====================================================
+
 function onOrientation(event) {
 
-    console.clear();
+    debugAlpha.textContent =
+        "Alpha: " +
 
-    console.table({
+        (
 
-        alpha: event.alpha,
+            event.alpha == null
 
-        beta: event.beta,
+                ? "-"
 
-        gamma: event.gamma,
+                : Math.round(event.alpha)
 
-        absolute: event.absolute
+        );
 
-    });
+    debugBeta.textContent =
+        "Beta: " +
+
+        (
+
+            event.beta == null
+
+                ? "-"
+
+                : Math.round(event.beta)
+
+        );
+
+    debugGamma.textContent =
+        "Gamma: " +
+
+        (
+
+            event.gamma == null
+
+                ? "-"
+
+                : Math.round(event.gamma)
+
+        );
+
+    debugAbsolute.textContent =
+        "Absolute: " +
+
+        (
+
+            event.absolute === true
+
+                ? "true"
+
+                : "false"
+
+        );
+
+    if (event.alpha == null) {
+
+        return;
+
+    }
+
+    currentHeading =
+        normalizeHeading(event.alpha);
 
 }
 
