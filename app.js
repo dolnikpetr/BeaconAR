@@ -236,27 +236,37 @@ async function startCompass() {
 
     }
 
-    window.addEventListener(
+    if ("ondeviceorientationabsolute" in window) {
 
-        "deviceorientationabsolute",
+        console.log("Using deviceorientationabsolute");
 
-        onOrientation,
+        window.addEventListener(
 
-        true
+            "deviceorientationabsolute",
 
-    );
+            onOrientation,
 
-    window.addEventListener(
+            true
 
-        "deviceorientation",
+        );
 
-        onOrientation,
+    }
 
-        true
+    else {
 
-    );
+        console.log("Using deviceorientation");
 
-    console.log("Compass started.");
+        window.addEventListener(
+
+            "deviceorientation",
+
+            onOrientation,
+
+            true
+
+        );
+
+    }
 
 }
 
