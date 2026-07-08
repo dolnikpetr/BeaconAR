@@ -12,19 +12,26 @@
 // CONFIG
 // =====================================================
 
+const VERSION = "3";
+
+const API =
+    "https://script.google.com/macros/s/AKfycbz3I2onzrPLR7Bcfb-6cbeRtA74hf6utX0YGkIpCV_VKGR4jOPhBhdzzcKatojh6PvZWA/exec";
+
+// =====================================================
+// DOM
+// =====================================================
+
 const screenSelect =
     document.getElementById("screenSelect");
 
 const screenAR =
     document.getElementById("screenAR");
 
+const scenarioList =
+    document.getElementById("scenarioList");
+
 const camera =
     document.getElementById("camera");
-
-const VERSION = "1";
-
-const API =
-    "https://script.google.com/macros/s/AKfycbz3I2onzrPLR7Bcfb-6cbeRtA74hf6utX0YGkIpCV_VKGR4jOPhBhdzzcKatojh6PvZWA/exec";
 
 // =====================================================
 // STATE
@@ -32,13 +39,16 @@ const API =
 
 let currentScenario = null;
 
-// =====================================================
+let currentLocation = null;
 
-const scenarioList =
-    document.getElementById("scenarioList");
+let gpsWatchId = null;
+
+// =====================================================
 
 window.addEventListener("load", init);
 
+// =====================================================
+// INIT
 // =====================================================
 
 async function init() {
@@ -80,76 +90,8 @@ async function init() {
 }
 
 // =====================================================
-
-
-async function enterAR() {
-
-    screenSelect.remove();
-
-    screenAR.hidden = false;
-
-    await startCamera();
-
-}
-
-
+// UI
 // =====================================================
-
-// =====================================================
-
-async function startCamera() {
-
-    console.log("Starting camera...");
-
-    if (!navigator.mediaDevices?.getUserMedia) {
-
-        throw new Error("Prohlížeč nepodporuje kameru.");
-
-    }
-
-    let stream;
-
-    try {
-
-        console.log("Trying back camera...");
-
-        stream = await navigator.mediaDevices.getUserMedia({
-
-            video: {
-
-                facingMode: {
-                    ideal: "environment"
-                }
-
-            },
-
-            audio: false
-
-        });
-
-    }
-
-    catch (error) {
-
-        console.warn("Back camera failed, trying default camera...", error);
-
-        stream = await navigator.mediaDevices.getUserMedia({
-
-            video: true,
-
-            audio: false
-
-        });
-
-    }
-
-    camera.srcObject = stream;
-
-    await camera.play();
-
-    console.log("Camera started.");
-
-}
 
 function renderScenarioList(list) {
 
@@ -176,43 +118,186 @@ function renderScenarioList(list) {
 }
 
 // =====================================================
-
+// SCENARIO
+// =====================================================
 
 async function loadScenario(id) {
-
-    console.log("Loading scenario:", id);
 
     try {
 
         const response = await fetch(
+
             `${API}?action=scenario&id=${encodeURIComponent(id)}&_=${Date.now()}`,
+
             {
                 cache: "no-store"
             }
+
         );
 
-        console.log("Response:", response);
-
-        const data = await response.json();
-
-        console.log("Data:", data);
+        const data =
+            await response.json();
 
         if (!data.success) {
+
             throw new Error(data.error);
+
         }
 
         currentScenario = data.scenario;
 
-        console.log("Current scenario:", currentScenario);
+        console.log(currentScenario);
 
         await enterAR();
 
     }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+
+    }
+
+}
+
+// =====================================================
+// AR
+// =====================================================
+
+async function enterAR() {
+
+    screenSelect.hidden = true;
+
+    screenAR.hidden = false;
+
+    try {
+
+        await startCamera();
+
+    }
+
     catch (error) {
 
         console.error(error);
 
     }
 
+    startGPS();
+
 }
 
+// =====================================================
+// CAMERA
+// =====================================================
+
+async function startCamera() {
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+
+        throw new Error("Prohlížeč nepodporuje kameru.");
+
+    }
+
+    let stream;
+
+    try {
+
+        stream = await navigator.mediaDevices.getUserMedia({
+
+            video: {
+
+                facingMode: {
+                    ideal: "environment"
+                }
+
+            },
+
+            audio: false
+
+        });
+
+    }
+
+    catch {
+
+        stream = await navigator.mediaDevices.getUserMedia({
+
+            video: true,
+
+            audio: false
+
+        });
+
+    }
+
+    camera.srcObject = stream;
+
+    await camera.play();
+
+}
+
+// =====================================================
+// GPS
+// =====================================================
+
+function startGPS() {
+
+    if (!navigator.geolocation) {
+
+        console.warn("GPS není podporována.");
+
+        return;
+
+    }
+
+    gpsWatchId = navigator.geolocation.watchPosition(
+
+        onPosition,
+
+        onPositionError,
+
+        {
+
+            enableHighAccuracy: true,
+
+            maximumAge: 0,
+
+            timeout: 10000
+
+        }
+
+    );
+
+}
+
+// =====================================================
+
+function onPosition(position) {
+
+    currentLocation = {
+
+        latitude: position.coords.latitude,
+
+        longitude: position.coords.longitude,
+
+        accuracy: position.coords.accuracy,
+
+        heading: position.coords.heading,
+
+        speed: position.coords.speed
+
+    };
+
+    console.log(currentLocation);
+
+}
+
+// =====================================================
+
+function onPositionError(error) {
+
+    console.error(error);
+
+}
