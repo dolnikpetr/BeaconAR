@@ -31,28 +31,54 @@
 <body>
 
     <!-- ===================================================== -->
-    <!-- CAMERA -->
-    <!-- ===================================================== -->
-
-    <video
-        id="camera"
-        autoplay
-        muted
-        playsinline
-        hidden
-    ></video>
-
-    <!-- ===================================================== -->
     <!-- SELECT SCENARIO -->
     <!-- ===================================================== -->
 
     <section id="screenSelect">
 
-        <h1>Vyber scénář</h1>
+        <h1>Beacon AR</h1>
+
+        <h2>Vyber scénář</h2>
 
         <div id="scenarioList">
 
             <p>Načítám scénáře...</p>
+
+        </div>
+
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- AR -->
+    <!-- ===================================================== -->
+
+    <section id="screenAR" hidden>
+
+        <!-- Camera -->
+
+        <video
+            id="camera"
+            autoplay
+            muted
+            playsinline
+        ></video>
+
+        <!-- AR Overlay -->
+
+        <div id="overlay">
+
+            <!--
+                Budoucí obsah:
+
+                Crosshair
+                Compass
+                Goal
+                Danger
+                Point labels
+                Distance
+                HUD
+                Debug
+            -->
 
         </div>
 
